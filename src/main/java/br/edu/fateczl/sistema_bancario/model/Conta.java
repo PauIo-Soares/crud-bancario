@@ -15,10 +15,12 @@ public abstract class Conta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
+    @Column(nullable = false)
     private LocalDate dataAbertura;
+    @Column(nullable = false)
     private BigDecimal saldo;
     @ManyToOne
-    @JoinColumn(name = "agencia_id")
+    @JoinColumn(name = "agencia_id", nullable = false)
     private Agencia agencia;
     @ManyToMany
     @JoinTable(

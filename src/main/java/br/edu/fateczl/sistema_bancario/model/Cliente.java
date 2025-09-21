@@ -12,8 +12,11 @@ import java.util.List;
 public class Cliente {
     @Id
     private String cpf;
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
     private LocalDate dataPrimeiraConta;
+    @Column(nullable = false)
     private String senha;
     @ManyToMany(mappedBy = "titulares")
     private List<Conta> contas;

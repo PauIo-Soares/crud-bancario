@@ -12,8 +12,11 @@ public class InstituicaoBancaria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
     private String cep;
+    @Column(nullable = false)
     private String cidade;
     @OneToMany(mappedBy = "instituicao")
     private List<Agencia> agencias;
