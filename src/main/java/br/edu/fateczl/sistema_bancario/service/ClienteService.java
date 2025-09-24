@@ -17,7 +17,7 @@ public class ClienteService {
     private ClienteProcedureRepository clienteProcedureRepository;
 
     public String inserirCliente(Cliente cliente) {
-        return clienteProcedureRepository.criarCliente(
+        return clienteProcedureRepository.inserirCliente(
                 cliente.getCpf(),
                 cliente.getNome(),
                 cliente.getDataPrimeiraConta(),
@@ -25,21 +25,22 @@ public class ClienteService {
         );
     }
 
-    public String modificarCliente(Cliente cliente) {
-         clienteRepository.save(cliente);
-        return "Cliente modificado com sucesso";
+    public void alterarSenha(Cliente cliente) {
+        clienteProcedureRepository.alterarSenha(cliente);
+        // TODO procedure
     }
 
-    public String excluirClientePorCodigo(String cpf) {
-        // procedure
+    public String excluirCliente(String cpf) {
+        //TODO procedure
+        clienteProcedureRepository.excluirCliente(cpf);
         return "Cliente excluído com sucesso";
     }
 
-    public Cliente buscarPorCpf(String cpf){
+    public Cliente buscarCliente(String cpf){
         return clienteRepository.findById(cpf).orElse(null);
     }
 
-    public List<Cliente> listarTodos() {
+    public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
     }
 }

@@ -26,4 +26,25 @@ public class ContaProcedureRepository {
                 }
         );
     }
+
+    public void atualizarSaldo() {
+        //{call sp_atualizar_saldo}
+    }
+
+    public void atualizarLimite() {
+        //{call sp_atualizar_limite}
+    }
+
+    public void atualizarRendimento() {
+        //{call sp_atualizar_rendimento}
+    }
+
+
+    public void excluirConta() {
+        //{call sp_excluir_conta}
+    }
+
+    public void adicionarSegundoTitular() {
+        //{call sp_adicionar_titular_conta}
+    }
 }

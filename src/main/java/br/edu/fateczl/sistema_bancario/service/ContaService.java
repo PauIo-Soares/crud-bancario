@@ -24,21 +24,46 @@ public class ContaService {
         );
     }
 
-    public String modificarConta(Conta conta) {
+    public String atualizarSaldo(Conta conta) {
         // procedure
-        return "Conta modificada com sucesso";
+        contaProcedureRepository.atualizarSaldo();
+        return "Dados da conta alterados com sucesso";
     }
 
-    public String excluirContaPorCodigo(String codigo) {
+    public String atualizarLimite(Conta conta) {
         // procedure
+        contaProcedureRepository.atualizarLimite();
+        return "Dados da conta alterados com sucesso";
+    }
+
+    public String atualizarRendimento(Conta conta) {
+        // procedure
+        contaProcedureRepository.atualizarRendimento();
+        return "Dados da conta alterados com sucesso";
+    }
+
+    public String excluirConta(String codigo) {
+        // procedure
+        contaProcedureRepository.excluirConta();
         return "Conta excluída com sucesso";
     }
 
-    public Conta buscarPorCodigo(Long codigo){
+    public Conta buscarConta(Long codigo){
         return contaRepository.findById(codigo).orElse(null);
     }
 
-    public List<Conta> listarTodas() {
+    public List<Conta> listarContas() {
         return contaRepository.findAll();
+    }
+
+    public void adicionarSegundoTitular(Long codigoConta, String codigoCliente) {
+        // TODO
+        contaProcedureRepository.adicionarSegundoTitular();
+    }
+
+    public Conta buscarDadosContas(String cpf) {
+        //Da pra fazer sem procedure eu acho
+        //TODO basicamente pegar do banco e montar um DTO pra jogar, seria tipo um find all by id
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package br.edu.fateczl.sistema_bancario.persistence;
 
+import br.edu.fateczl.sistema_bancario.model.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,9 +13,9 @@ public class ClienteProcedureRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public String criarCliente(String cpf, String nome, LocalDate dataPrimeiraConta, String senha) {
+    public String inserirCliente(String cpf, String nome, LocalDate dataPrimeiraConta, String senha) {
         return jdbcTemplate.execute(
-                "{call sp_criar_cliente(?, ?, ?, ?, ?)}",
+                "{call sp_inserir_cliente(?, ?, ?, ?, ?)}",
                 (CallableStatementCallback<String>) cs -> {
                     cs.setString(1, cpf);
                     cs.setString(2, nome);
@@ -25,5 +26,14 @@ public class ClienteProcedureRepository {
                     return cs.getString(5);
                 }
         );
+    }
+    //TODO
+    public void alterarSenha(Cliente cliente) {
+        // {call sp_senha_cliente}
+    }
+
+    //TODO
+    public void excluirCliente(String cpf) {
+        // {call sp_excluir_cliente}
     }
 }
