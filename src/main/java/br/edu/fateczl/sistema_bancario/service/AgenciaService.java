@@ -12,6 +12,21 @@ public class AgenciaService {
     @Autowired
     private AgenciaRepository agenciaRepository;
 
+    public String criarAgencia(Agencia agencia) {
+        agenciaRepository.save(agencia);
+        return "Agencia criada com sucesso";
+    }
+
+    public String modificarAgencia(Agencia agencia) {
+        agenciaRepository.save(agencia);
+        return "Agencia atualizada com sucesso";
+    }
+
+    public String excluirAgenciaPorCodigo(Long codigo) {
+        agenciaRepository.deleteById(codigo);
+        return "Agencia excluída com sucesso";
+    }
+
     public Agencia buscarPorCodigo(Long codigo){
         return agenciaRepository.findById(codigo).orElse(null);
     }
