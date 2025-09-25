@@ -6,10 +6,12 @@ import br.edu.fateczl.sistema_bancario.persistence.InstituicaoBancariaRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class InstituicaoBancariaService {
+
     @Autowired
     private InstituicaoBancariaRepository instituicaoBancariaRepository;
 
@@ -22,21 +24,40 @@ public class InstituicaoBancariaService {
         instituicaoBancariaRepository.save(entidade);
     }
 
-    public String atualizarInstituicaoBancaria(InstituicaoBancaria instituicaoBancaria) {
-        instituicaoBancariaRepository.save(instituicaoBancaria);
-        return "Instituicao Bancaria atualizada com sucesso";
+    public InstituicaoBancariaDTO buscarInstituicaoBancaria(Long codigo) {
+        InstituicaoBancaria instituicao = instituicaoBancariaRepository.findById(codigo).orElseThrow(() -> new RuntimeException("Instituição Bancaria não encontrada"));
+        return new InstituicaoBancariaDTO(
+                instituicao.getCodigo(),
+                instituicao.getNome(),
+                instituicao.getCep(),
+                instituicao.getCidade()
+        );
     }
 
-    public String excluirInstituicaoBancaria(Long codigo) {
+    public void atualizarInstituicaoBancaria(InstituicaoBancariaDTO dto) {
+        InstituicaoBancaria entidade = instituicaoBancariaRepository.findById(dto.getCodigo()).orElseThrow(() -> new RuntimeException("Instituição Bancaria não encontrada"));
+        if (dto.getNome() != null) entidade.setNome(dto.getNome());
+        if (dto.getCep() != null) entidade.setCep(dto.getCep());
+        if (dto.getCidade() != null) entidade.setCidade(dto.getCidade());
+        instituicaoBancariaRepository.save(entidade);
+    }
+
+    public void excluirInstituicaoBancaria(Long codigo) {
         instituicaoBancariaRepository.deleteById(codigo);
-        return "Instituicao Bancaria excluída com sucesso";
     }
 
-    public InstituicaoBancaria buscarInstituicaoBancaria(Long codigo){
-        return instituicaoBancariaRepository.findById(codigo).orElse(null);
-    }
+    public List<InstituicaoBancariaDTO> listarInstituicoesBancarias() {
+        List<InstituicaoBancaria> listaEntidades = instituicaoBancariaRepository.findAll();
+        List<InstituicaoBancariaDTO> resposta = new ArrayList<>();
 
-    public List<InstituicaoBancaria> listarInstituicoesBancarias() {
-        return instituicaoBancariaRepository.findAll();
+        for (InstituicaoBancaria i : listaEntidades) {
+            resposta.add(new InstituicaoBancariaDTO(
+                    i.getCodigo(),
+                    i.getNome(),
+                    i.getCep(),
+                    i.getCidade()
+            ));
+        }
+        return resposta;
     }
 }

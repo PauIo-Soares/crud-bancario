@@ -26,11 +26,6 @@ public class ClienteController {
         return clienteService.buscarCliente(cpf);
     }
 
-    @GetMapping
-    public List<Cliente> listarClientes() {
-        return clienteService.listarClientes();
-    }
-
     @PutMapping("/{cpf}")
     public String alterarSenha(@PathVariable String cpf, @RequestBody Cliente cliente) {
         clienteService.alterarSenha(cliente);
@@ -43,9 +38,14 @@ public class ClienteController {
         return "Cliente excluida com sucesso";
     }
 
+    @GetMapping
+    public List<Cliente> listarClientes() {
+        return clienteService.listarClientes();
+    }
+
     //TODO
 //    @PostMapping("/login")
-//    public String login(@RequestBody LoginDTO login) {
+//    public String autenticar(@RequestBody LoginDTO login) {
 //        boolean autenticado = clienteService.autenticar(login.getCpf(), login.getSenha());
 //        if (autenticado) {
 //            return "Login realizado com sucesso!";

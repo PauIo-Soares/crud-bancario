@@ -25,11 +25,6 @@ public class ContaController {
         return contaService.buscarConta(id);
     }
 
-    @GetMapping
-    public List<Conta> listarContas() {
-        return contaService.listarContas();
-    }
-
     @PutMapping("/saldo")
     public String atualizarSaldo(@RequestBody Conta conta) {
         contaService.atualizarSaldo(conta);
@@ -52,6 +47,11 @@ public class ContaController {
     public String excluirConta(@PathVariable Long id) {
         contaService.excluirConta(id);
         return "Conta excluida com sucesso";
+    }
+
+    @GetMapping
+    public List<Conta> listarContas() {
+        return contaService.listarContas();
     }
 
 //    TODO

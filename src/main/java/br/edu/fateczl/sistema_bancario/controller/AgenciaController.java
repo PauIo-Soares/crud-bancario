@@ -22,17 +22,12 @@ public class AgenciaController {
     }
 
     @GetMapping("/{codigo}")
-    public Agencia buscarAgencia(@PathVariable Long codigo) {
+    public AgenciaDTO buscarAgencia(@PathVariable Long codigo) {
         return agenciaService.buscarAgencia(codigo);
     }
 
-    @GetMapping
-    public List<Agencia> listarAgencias() {
-        return agenciaService.listarAgencias();
-    }
-
     @PutMapping
-    public String modificarAgencia(@RequestBody Agencia agencia) {
+    public String modificarAgencia(@RequestBody AgenciaDTO agencia) {
         agenciaService.modificarAgencia(agencia);
         return "Agencia modificada com sucesso";
     }
@@ -41,5 +36,9 @@ public class AgenciaController {
     public String excluirAgencia(@PathVariable Long codigo) {
         agenciaService.excluirAgencia(codigo);
         return "Agencia excluida com sucesso";
+    }
+    @GetMapping
+    public List<AgenciaDTO> listarAgencias() {
+        return agenciaService.listarAgencias();
     }
 }

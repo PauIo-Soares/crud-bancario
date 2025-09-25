@@ -2,7 +2,6 @@ package br.edu.fateczl.sistema_bancario.controller;
 
 
 import br.edu.fateczl.sistema_bancario.dto.InstituicaoBancariaDTO;
-import br.edu.fateczl.sistema_bancario.model.InstituicaoBancaria;
 import br.edu.fateczl.sistema_bancario.service.InstituicaoBancariaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +22,12 @@ public class InstituicaoBancariaController {
     }
 
     @GetMapping("/{codigo}")
-    public InstituicaoBancaria buscarInstituicaoBancaria(@PathVariable Long codigo) {
+    public InstituicaoBancariaDTO buscarInstituicaoBancaria(@PathVariable Long codigo) {
         return instituicaoBancariaService.buscarInstituicaoBancaria(codigo);
     }
 
-    @GetMapping
-    public List<InstituicaoBancaria> listarInstituicoesBancarias() {
-        return instituicaoBancariaService.listarInstituicoesBancarias();
-    }
-
     @PutMapping
-    public String atualizarInstituicaoBancaria(@RequestBody InstituicaoBancaria instituicao) {
+    public String atualizarInstituicaoBancaria(@RequestBody InstituicaoBancariaDTO instituicao) {
         instituicaoBancariaService.atualizarInstituicaoBancaria(instituicao);
         return "Instituicao Bancaria modificada";
     }
@@ -43,4 +37,10 @@ public class InstituicaoBancariaController {
         instituicaoBancariaService.excluirInstituicaoBancaria(codigo);
         return "Instituição Bancária excluida com sucesso";
     }
+
+    @GetMapping
+    public List<InstituicaoBancariaDTO> listarInstituicoesBancarias() {
+        return instituicaoBancariaService.listarInstituicoesBancarias();
+    }
+
 }
