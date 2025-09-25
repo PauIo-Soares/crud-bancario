@@ -4,45 +4,70 @@ import br.edu.fateczl.sistema_bancario.dto.AgenciaDTO;
 import br.edu.fateczl.sistema_bancario.model.Agencia;
 import br.edu.fateczl.sistema_bancario.model.InstituicaoBancaria;
 import br.edu.fateczl.sistema_bancario.persistence.AgenciaRepository;
+import br.edu.fateczl.sistema_bancario.persistence.InstituicaoBancariaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AgenciaService {
+
     @Autowired
     private AgenciaRepository agenciaRepository;
 
-    public String inserirAgencia(AgenciaDTO dto) {
-        InstituicaoBancaria instituicaoBancaria = new InstituicaoBancaria();
-        instituicaoBancaria.setCodigo(dto.getInstituicaoCodigo());
+    @Autowired
+    private InstituicaoBancariaRepository instituicaoBancariaRepository;
 
-        Agencia agencia = new Agencia();
-        agencia.setNome(dto.getNome());
-        agencia.setCep(dto.getCep());
-        agencia.setCidade(dto.getCidade());
-        agencia.setInstituicao(instituicaoBancaria);
+    public void inserirAgencia(AgenciaDTO dto) {
+        InstituicaoBancaria instituicao = instituicaoBancariaRepository.findById(dto.getCodigoInstituicao()).orElseThrow(() -> new RuntimeException("Instituição não encontrada"));
 
-        agenciaRepository.save(agencia);
-        return "Agencia criada com sucesso";
+        Agencia entidade = new Agencia();
+        entidade.setCodigo(dto.getCodigo());
+        entidade.setNome(dto.getNome());
+        entidade.setCep(dto.getCep());
+        entidade.setCidade(dto.getCidade());
+        entidade.setInstituicao(instituicao);
+        agenciaRepository.save(entidade);
     }
 
-    public String modificarAgencia(Agencia agencia) {
-        agenciaRepository.save(agencia);
-        return "Agencia atualizada com sucesso";
+    public AgenciaDTO buscarAgencia(Long codigo){
+        Agencia agencia = agenciaRepository.findById(codigo).orElseThrow(() -> new RuntimeException("Agencia não encontrada"));
+        return new AgenciaDTO(
+                agencia.getCodigo(),
+                agencia.getNome(),
+                agencia.getCep(),
+                agencia.getCidade(),
+                codigo
+        );
     }
 
-    public String excluirAgencia(Long codigo) {
+    public void modificarAgencia(AgenciaDTO dto) {
+        Agencia agencia = agenciaRepository.findById(dto.getCodigo()).orElseThrow(() -> new RuntimeException("Instituição Bancaria não encontrada"));
+        if (dto.getNome() != null) agencia.setNome(dto.getNome());
+        if (dto.getCep() != null) agencia.setCep(dto.getCep());
+        if (dto.getCidade() != null) agencia.setCidade(dto.getCidade());
+        agenciaRepository.save(agencia);
+    }
+
+    public void excluirAgencia(Long codigo) {
         agenciaRepository.deleteById(codigo);
-        return "Agencia excluída com sucesso";
     }
 
-    public Agencia buscarAgencia(Long codigo){
-        return agenciaRepository.findById(codigo).orElse(null);
-    }
+    public List<AgenciaDTO> listarAgencias() {
+        List<Agencia> listaEntidades = agenciaRepository.findAll();
+        List<AgenciaDTO> resposta = new ArrayList<>();
 
-    public List<Agencia> listarAgencias() {
-        return agenciaRepository.findAll();
+        for (Agencia i : listaEntidades) {
+            resposta.add(new AgenciaDTO(
+                    i.getCodigo(),
+                    i.getNome(),
+                    i.getCep(),
+                    i.getCidade(),
+                    i.getCodigo()
+            ));
+        }
+        return resposta;
     }
 }

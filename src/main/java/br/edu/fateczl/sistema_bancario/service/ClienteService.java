@@ -25,6 +25,10 @@ public class ClienteService {
         );
     }
 
+    public Cliente buscarCliente(String cpf){
+        return clienteRepository.findById(cpf).orElse(null);
+    }
+
     public void alterarSenha(Cliente cliente) {
         clienteProcedureRepository.alterarSenha(cliente);
         // TODO procedure
@@ -36,11 +40,9 @@ public class ClienteService {
         return "Cliente excluído com sucesso";
     }
 
-    public Cliente buscarCliente(String cpf){
-        return clienteRepository.findById(cpf).orElse(null);
-    }
-
     public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
     }
+
+    //TODO autenticar
 }

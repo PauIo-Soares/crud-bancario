@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public class ContaService {
+
     @Autowired
     private ContaRepository contaRepository;
 
@@ -17,11 +18,15 @@ public class ContaService {
     private ContaProcedureRepository contaProcedureRepository;
 
     public String criarConta(Conta conta) {
-        return contaProcedureRepository.criarConta(
+        return contaProcedureRepository.criarConta( //TODO
                 conta.getDataAbertura(),
                 conta.getSaldo(),
                 conta.getAgencia().getCodigo()
         );
+    }
+
+    public Conta buscarConta(Long id){
+        return contaRepository.findById(id).orElse(null);
     }
 
     public String atualizarSaldo(Conta conta) {
@@ -48,10 +53,6 @@ public class ContaService {
         return "Conta excluída com sucesso";
     }
 
-    public Conta buscarConta(Long id){
-        return contaRepository.findById(id).orElse(null);
-    }
-
     public List<Conta> listarContas() {
         return contaRepository.findAll();
     }
@@ -63,7 +64,7 @@ public class ContaService {
 //
 //    public Conta buscarDadosContas(String cpf) {
 //        //Da pra fazer sem procedure eu acho
-//        //TODO basicamente pegar do banco e montar um DTO pra jogar, seria tipo um find all by id
+//        //TODO basicamente pegar do banco e montar um DTO pra jogar, seria tipo um find all by cpf
 //        return null;
 //    }
 }
