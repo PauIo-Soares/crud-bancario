@@ -20,9 +20,9 @@ public class ContaController {
         return "Conta inserido com sucesso";
     }
 
-    @GetMapping("/{codigo}")
-    public Conta buscarConta(@PathVariable Long codigo) {
-        return contaService.buscarConta(codigo);
+    @GetMapping("/{id}")
+    public Conta buscarConta(@PathVariable Long id) {
+        return contaService.buscarConta(id);
     }
 
     @GetMapping
@@ -30,38 +30,37 @@ public class ContaController {
         return contaService.listarContas();
     }
 
-    @PutMapping
+    @PutMapping("/saldo")
     public String atualizarSaldo(@RequestBody Conta conta) {
         contaService.atualizarSaldo(conta);
         return "Conta alterada com sucesso";
     }
 
-    @PutMapping
+    @PutMapping("/limite")
     public String atualizarLimite(@RequestBody Conta conta) {
         contaService.atualizarLimite(conta);
         return "Conta alterada com sucesso";
     }
 
-    @PutMapping
+    @PutMapping("/rendimento")
     public String atualizarRendimento(@RequestBody Conta conta) {
         contaService.atualizarRendimento(conta);
         return "Conta alterada com sucesso";
     }
 
-    @DeleteMapping("/{cpf}")
-    public String excluirConta(@PathVariable String cpf) {
-        contaService.excluirConta(cpf);
+    @DeleteMapping("/{id}")
+    public String excluirConta(@PathVariable Long id) {
+        contaService.excluirConta(id);
         return "Conta excluida com sucesso";
     }
 
-    //TODO
-    @PostMapping("/{codigoConta}/titular/{codigoCliente}")
-    public String adicionarSegundoTitular(@PathVariable Long codigoConta, @PathVariable String codigoCliente) {
-        contaService.adicionarSegundoTitular(codigoConta, codigoCliente); //Revisar
-        return "Segundo titular adicionado com sucesso!";
-    }
-
-    //TODO
+//    TODO
+//    @PostMapping("/{codigoConta}/titular/{codigoCliente}")
+//    public String adicionarSegundoTitular(@PathVariable Long codigoConta, @PathVariable String codigoCliente) {
+//        contaService.adicionarSegundoTitular(codigoConta, codigoCliente); //Revisar
+//        return "Segundo titular adicionado com sucesso!";
+//    }
+//    TODO
 //    @GetMapping("/dados/{cpf}")
 //    public ContaDTO buscarDadosContas(@PathVariable String cpf) {
 //        Conta conta = contaService.buscarDadosContas(cpf);

@@ -1,6 +1,7 @@
 package br.edu.fateczl.sistema_bancario.controller;
 
 
+import br.edu.fateczl.sistema_bancario.dto.InstituicaoBancariaDTO;
 import br.edu.fateczl.sistema_bancario.model.InstituicaoBancaria;
 import br.edu.fateczl.sistema_bancario.service.InstituicaoBancariaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class InstituicaoBancariaController {
     private InstituicaoBancariaService instituicaoBancariaService;
 
     @PostMapping
-    public String inserirInstituicaoBancaria(@RequestBody InstituicaoBancaria instituicaoBancaria) {
+    public String inserirInstituicaoBancaria(@RequestBody InstituicaoBancariaDTO instituicaoBancaria) {
         instituicaoBancariaService.inserirInstituicaoBancaria(instituicaoBancaria);
         return "Instituição Bancária inserida com sucesso";
     }

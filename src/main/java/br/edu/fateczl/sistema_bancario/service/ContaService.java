@@ -42,28 +42,28 @@ public class ContaService {
         return "Dados da conta alterados com sucesso";
     }
 
-    public String excluirConta(String codigo) {
+    public String excluirConta(Long id) {
         // procedure
         contaProcedureRepository.excluirConta();
         return "Conta excluída com sucesso";
     }
 
-    public Conta buscarConta(Long codigo){
-        return contaRepository.findById(codigo).orElse(null);
+    public Conta buscarConta(Long id){
+        return contaRepository.findById(id).orElse(null);
     }
 
     public List<Conta> listarContas() {
         return contaRepository.findAll();
     }
 
-    public void adicionarSegundoTitular(Long codigoConta, String codigoCliente) {
-        // TODO
-        contaProcedureRepository.adicionarSegundoTitular();
-    }
-
-    public Conta buscarDadosContas(String cpf) {
-        //Da pra fazer sem procedure eu acho
-        //TODO basicamente pegar do banco e montar um DTO pra jogar, seria tipo um find all by id
-        return null;
-    }
+//    public void adicionarSegundoTitular(Long id, String codigoCliente) {
+//        // TODO
+//        contaProcedureRepository.adicionarSegundoTitular();
+//    }
+//
+//    public Conta buscarDadosContas(String cpf) {
+//        //Da pra fazer sem procedure eu acho
+//        //TODO basicamente pegar do banco e montar um DTO pra jogar, seria tipo um find all by id
+//        return null;
+//    }
 }

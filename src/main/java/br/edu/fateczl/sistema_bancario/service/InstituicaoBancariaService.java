@@ -1,5 +1,6 @@
 package br.edu.fateczl.sistema_bancario.service;
 
+import br.edu.fateczl.sistema_bancario.dto.InstituicaoBancariaDTO;
 import br.edu.fateczl.sistema_bancario.model.InstituicaoBancaria;
 import br.edu.fateczl.sistema_bancario.persistence.InstituicaoBancariaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,13 @@ public class InstituicaoBancariaService {
     @Autowired
     private InstituicaoBancariaRepository instituicaoBancariaRepository;
 
-    public String inserirInstituicaoBancaria(InstituicaoBancaria instituicaoBancaria) {
-        instituicaoBancariaRepository.save(instituicaoBancaria);
-        return "Instituicao Bancaria criada com sucesso";
+    public void inserirInstituicaoBancaria(InstituicaoBancariaDTO dto) {
+        InstituicaoBancaria entidade = new InstituicaoBancaria();
+        entidade.setCodigo(dto.getCodigo());
+        entidade.setNome(dto.getNome());
+        entidade.setCep(dto.getCep());
+        entidade.setCidade(dto.getCidade());
+        instituicaoBancariaRepository.save(entidade);
     }
 
     public String atualizarInstituicaoBancaria(InstituicaoBancaria instituicaoBancaria) {

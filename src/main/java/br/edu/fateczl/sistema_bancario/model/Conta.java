@@ -13,8 +13,11 @@ import java.util.List;
 @Data
 public abstract class Conta {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codigo;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instit_seq")
+    @SequenceGenerator(name = "instit_seq", sequenceName = "instit_seq", initialValue = 1000, allocationSize = 10)
+    private Long id;
+    @Column(nullable = false)
+    private String codigo;
     @Column(nullable = false)
     private LocalDate dataAbertura;
     @Column(nullable = false)
