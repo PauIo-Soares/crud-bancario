@@ -55,6 +55,8 @@ AS
 	END
 	GO
 
+
+
 Create procedure sp_cria_cliente(
 @cpf VARCHAR(11), @nome VARCHAR(100), @senha VARCHAR(8), @saida varchar(200) OUTPUT)
 AS
@@ -91,23 +93,41 @@ AS
 Create procedure sp_cria_conta(
 @cpfcliente VARCHAR(11), @cpfconjunto VARCHAR(11), @nomeConjunto VARCHAR(100), @senhaConjunto VARCHAR(8), @agencia VARCHAR(10), @opcaoConta CHAR(1), @saida VARCHAR(200) OUTPUT)
 AS 
-	DECLARE @dataAniversario date, @codigo VARCHAR(20)
+	DECLARE @dataAniversario date, @codigo VARCHAR(20), @maxID int
+	IF NOT EXISTS (SELECT * FROM tb_clientes WHERE cpf LIKE @cpfcliente)
+	BEGIN
+		RAISERROR('O cliente não existe. É necessário criar um cliente antes!', 16, 1)
+		RETURN
+	END
+	IF EXISTS (SELECT * FROM tb_clientes where cpf LIKE @cpfcliente)
+	BEGIN
+		exec sp_cria_codigo_conta @cpfcliente, NULL, @agencia, @codigo output
+		IF EXISTS (SELECT * FROM tb_contas where codigo LIKE @codigo)
+		BEGIN
+			RAISERROR('A conta já existe.', 16, 1)
+			RETURN
+		END
+	END
 	IF(UPPER(@opcaoConta) LIKE 'C')
 	BEGIN
 		IF(@cpfconjunto IS NULL)
 		BEGIN
 			EXEC sp_cria_codigo_conta @cpfcliente, NULL, @agencia, @codigo OUTPUT
-			INSERT INTO tb_contas_correntes VALUES (500.00, @codigo)
-			INSERT INTO tb_contas VALUES (@codigo, GETDATE(), 0.0, @agencia)
-			SET @saida = 'Conta corrente criada com sucesso!'
+			INSERT INTO tb_contas(id, codigo, data_abertura, saldo, agencia_id) VALUES (NEXT VALUE for instit_seq, @codigo, GETDATE(), 0.0, @agencia)
+			Select @maxID = MAX(id) from tb_contas
+			INSERT INTO tb_contas_correntes VALUES (500, @maxID)
+			EXEC sp_insere_titulares @cpfcliente, NULL, @maxID, @saida OUTPUT
+			SET @saida = @saida + ' Conta corrente criada com sucesso!'
 			Return
 		END
 		ELSE
 		BEGIN
 			EXEC sp_cria_cliente  @cpfconjunto, @nomeConjunto, @senhaConjunto, @saida OUTPUT
 			EXEC sp_cria_codigo_conta @cpfcliente, @cpfconjunto, @agencia, @codigo OUTPUT
-			INSERT INTO tb_contas_correntes VALUES (500.00, @codigo)
-			INSERT INTO tb_contas VALUES (@codigo, GETDATE(), 0.0, @agencia)
+			INSERT INTO tb_contas(id, codigo, data_abertura, saldo, agencia_id) VALUES (NEXT VALUE for instit_seq, @codigo, GETDATE(), 0.0, @agencia)
+			Select @maxID = MAX(id) from tb_contas
+			INSERT INTO tb_contas_correntes VALUES (500, @maxID)
+			EXEC sp_insere_titulares @cpfcliente, @cpfconjunto, @maxID, @saida OUTPUT
 			SET @saida = @saida + ' Conta corrente conjunta criada com sucesso!'
 			RETURN
 		END
@@ -120,44 +140,93 @@ AS
 			IF(@cpfconjunto IS NULL)
 			BEGIN
 				EXEC sp_cria_codigo_conta @cpfcliente, NULL, @agencia, @codigo OUTPUT
-				INSERT INTO tb_contas_poupancas VALUES (@dataAniversario, 0.01, @codigo)
-				INSERT INTO tb_contas VALUES (@codigo, GETDATE(), 0.0, @agencia)
-				SET @saida = 'Conta poupança criada com sucesso!'
+				INSERT INTO tb_contas(id, codigo, data_abertura, saldo, agencia_id) VALUES (NEXT VALUE for instit_seq, @codigo, GETDATE(), 0.0, @agencia)
+				Select @maxID = MAX(id) from tb_contas
+				INSERT INTO tb_contas_poupancas VALUES (@dataAniversario, 0.01, @maxID)
+				EXEC sp_insere_titulares @cpfcliente, NULL, @maxID, @saida OUTPUT
+				SET @saida = @saida + ' Conta poupança criada com sucesso!'
 				RETURN
 			END
 			ELSE
 			BEGIN
 				EXEC sp_cria_cliente  @cpfconjunto, @nomeConjunto, @senhaConjunto, @saida OUTPUT
 				EXEC sp_cria_codigo_conta @cpfcliente, @cpfconjunto, @agencia, @codigo OUTPUT
-				INSERT INTO tb_contas_poupancas VALUES (@dataAniversario, 0.01, @codigo)
-				INSERT INTO tb_contas VALUES (@codigo, GETDATE(), 0.0, @agencia)
+				INSERT INTO tb_contas(id, codigo, data_abertura, saldo, agencia_id) VALUES (NEXT VALUE for instit_seq, @codigo, GETDATE(), 0.0, @agencia)
+				Select @maxID = MAX(id) from tb_contas
+				INSERT INTO tb_contas_poupancas VALUES (@dataAniversario, 0.01, @maxID)
+				EXEC sp_insere_titulares @cpfcliente, @cpfconjunto, @maxID, @saida OUTPUT
 				SET @saida = @saida + ' Conta poupança conjunta criada com sucesso!'
 				RETURN
 			END
 		END
 	END
-	
+	GO
+
+CREATE procedure sp_insere_titulares(
+@cpfcliente varchar(11), @cpfconjunto varchar(11), @IDConta int, @saida VARCHAR(100) OUTPUT)
+AS
+	IF(@cpfconjunto IS NULL)
+	BEGIN
+		INSERT INTO tb_titulares_conta(cliente_id, conta_id) values (@cpfcliente, @IDConta)
+		SET @saida = ' Inserido em titulares com sucesso!'
+	END
+	ELSE
+	BEGIN
+		INSERT INTO tb_titulares_conta(cliente_id, conta_id) values (@cpfcliente, @IDConta)
+		INSERT INTO tb_titulares_conta(cliente_id, conta_id) values (@cpfconjunto, @IDConta)
+		SET @saida = ' Inseridos em titulares com sucesso!'
+	END
+	GO
 
 
+CREATE PROCEDURE sp_insere_segundo_titular(
+@cpfcliente varchar(11), @cpfconjunto varchar(11), @nome varchar(100), @senha varchar(100), @saida varchar(200) OUTPUT)
+AS
+	DECLARE @idConta int, @agencia varchar(10), @codConta varchar(20)
+	SELECT @idConta = conta_id from tb_titulares_conta where cliente_id = @cpfcliente
+	SELECT @agencia = agencia_id from tb_contas where id = @idConta
+	exec sp_cria_cliente @cpfconjunto, @nome, @senha, @saida OUTPUT
+	exec sp_cria_codigo_conta @cpfcliente, @cpfconjunto, @agencia, @codConta OUTPUT
 
+	UPDATE tb_contas
+	SET codigo = @codConta
+	where id = @idConta
+
+	exec sp_insere_titulares @cpfconjunto, NULL, @idConta, @saida OUTPUT
+
+	set @saida = @saida + ' Segundo titular incluído com sucesso!'
+	GO
 
 
 
 
 DECLARE @out1 VARCHAR(MAX)
-EXEC sp_cria_cliente '11', 'Joao', '312dogui', @out1 OUTPUT
+EXEC sp_cria_cliente '11104823220', 'Julio', '312dogui', @out1 OUTPUT
 print(@out1)
 
 
-DROP PROCEDURE sp_cria_cliente
+DECLARE @out2 VARCHAR(200)
+EXEC sp_cria_conta '38588813840', NULL, NULL, NULL, '1', 'C', @out2 OUTPUT
+print @out2
+
+DECLARE @out3 VARCHAR(200)
+EXEC sp_cria_conta '11104823220', '11104723220', 'Paulo', '123dogui', '1', 'P', @out3 OUTPUT
+print @out3
+
+DECLARE @out4 VARCHAR(200)
+EXEC sp_insere_segundo_titular '38588813840', '23443256712', 'Olivia', 'picao123', @out4 OUTPUT
+print @out4
+
+DROP PROCEDURE sp_insere_segundo_titular
 
 
 select * from tb_clientes
-select * from tb_agencias
 Select * from tb_contas
 Select * from tb_contas_correntes
 Select * from tb_contas_poupancas
 Select * from tb_titulares_conta
 
-SELECT * FROM tb_agencias
-SELECT * FROM tb_instituicoes_bancarias
+DELETE from tb_titulares_conta WHERE cliente_id = '23443256712'
+DELETE from tb_clientes WHERE cpf = '23443256712'
+
+
