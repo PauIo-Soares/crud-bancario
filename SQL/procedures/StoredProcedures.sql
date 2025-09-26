@@ -180,21 +180,31 @@ AS
 
 
 CREATE PROCEDURE sp_insere_segundo_titular(
-@cpfcliente varchar(11), @cpfconjunto varchar(11), @nome varchar(100), @senha varchar(100), @saida varchar(200) OUTPUT)
+@cpfcliente varchar(11), @cpfconjunto varchar(11), @nome varchar(100), @senha varchar(100), @codigo varchar(20), @data_abertura date, @saida varchar(200) OUTPUT)
 AS
-	DECLARE @idConta int, @agencia varchar(10), @codConta varchar(20)
-	SELECT @idConta = conta_id from tb_titulares_conta where cliente_id = @cpfcliente
-	SELECT @agencia = agencia_id from tb_contas where id = @idConta
-	exec sp_cria_cliente @cpfconjunto, @nome, @senha, @saida OUTPUT
-	exec sp_cria_codigo_conta @cpfcliente, @cpfconjunto, @agencia, @codConta OUTPUT
+	DECLARE @saldo decimal(10,2)
+	SELECT @saldo = saldo from tb_contas where codigo = @codigo
+	IF(@saldo = 0.00 AND @data_abertura <> GETDATE())
+	Begin
+		RAISERROR('O saldo precisa ser maior que 0', 16, 1)
+		RETURN
+	END
+	ELSE
+	BEGIN
+		DECLARE @idConta int, @agencia varchar(10), @codConta varchar(20)
+		SELECT @idConta = conta_id from tb_titulares_conta where cliente_id = @cpfcliente
+		SELECT @agencia = agencia_id from tb_contas where id = @idConta
+		exec sp_cria_cliente @cpfconjunto, @nome, @senha, @saida OUTPUT
+		exec sp_cria_codigo_conta @cpfcliente, @cpfconjunto, @agencia, @codConta OUTPUT
 
-	UPDATE tb_contas
-	SET codigo = @codConta
-	where id = @idConta
+		UPDATE tb_contas
+		SET codigo = @codConta
+		where id = @idConta
 
-	exec sp_insere_titulares @cpfconjunto, NULL, @idConta, @saida OUTPUT
+		exec sp_insere_titulares @cpfconjunto, NULL, @idConta, @saida OUTPUT
 
-	set @saida = @saida + ' Segundo titular incluído com sucesso!'
+		set @saida = @saida + ' Segundo titular incluído com sucesso!'
+	END
 	GO
 
 
@@ -213,9 +223,6 @@ DECLARE @out3 VARCHAR(200)
 EXEC sp_cria_conta '11104823220', '11104723220', 'Paulo', '123dogui', '1', 'P', @out3 OUTPUT
 print @out3
 
-DECLARE @out4 VARCHAR(200)
-EXEC sp_insere_segundo_titular '38588813840', '23443256712', 'Olivia', 'picao123', @out4 OUTPUT
-print @out4
 
 DROP PROCEDURE sp_insere_segundo_titular
 
