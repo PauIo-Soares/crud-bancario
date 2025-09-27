@@ -208,23 +208,112 @@ AS
 	GO
 
 
+CREATE Procedure sp_atualiza_senha(
+@cpfcliente varchar(11), @novaSenha varchar(30), @saida varchar(200) OUTPUT)
+AS
+	IF(@cpfcliente IS NULL or @novaSenha IS NULL)
+	BEGIN
+		RAISERROR('Todos os campos precisam estar preenchidos!',16,1)
+		RETURN
+	END
+	UPDATE tb_clientes
+	SET senha = @novaSenha
+	where cpf = @cpfcliente
+	SET @saida = 'Senha do cliente de cpf ' + @cpfcliente + ' atualiada!'
+	GO
+
+
+CREATE Procedure sp_atualiza_saldo(
+@codigo varchar(20), @saldo decimal(10,2), @saida varchar(200) output)
+AS
+	DECLARE @idConta int
+	SELECT @idConta = id from tb_contas where codigo = @codigo
+	UPDATE tb_contas
+	set saldo = @saldo
+	where id = @idConta
+	set @saida = 'Saldo da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
+	GO
+
+CREATE Procedure sp_atualiza_limite(
+@codigo varchar(20), @novoLimite decimal(10,2), @saida varchar(200) OUTPUT)
+AS
+	DECLARE @idConta int
+	SELECT @idConta = id from tb_contas where codigo = @codigo
+	UPDATE tb_contas_correntes
+	SET limite_credito = @novoLimite
+	where id = @idConta
+	set @saida = 'Limite da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
+	GO
+
+CREATE Procedure sp_atualiza_rendimento(
+@codigo varchar(20), @novoRendimento decimal(3,3), @saida varchar(200) OUTPUT)
+AS
+	DECLARE @idConta int
+	SELECT @idConta = id from tb_contas where codigo = @codigo
+	UPDATE tb_contas_poupancas
+	SET rendimento = @novoRendimento
+	where id = @idConta
+	set @saida = 'Rendimento da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
+	GO
+
+
+CREATE Procedure sp_deleta_cliente(
+@cpfcliente varchar(11), @codigo varchar(20), @saida varchar(200) output)
+AS
+	SET NOCOUNT ON
+	DECLARE @idConta int
+	SELECT @idConta = id from tb_contas where codigo = @codigo
+	IF(LEN(@codigo) > 7)
+	BEGIN
+		RAISERROR ('Não é possível excluir uma conta conjunta!', 16, 1)
+		RETURN
+	END
+
+	DELETE from tb_contas_correntes where id = @idConta
+	DELETE from tb_contas_poupancas where id = @idConta
+	DELETE from tb_titulares_conta where conta_id = @idConta
+	DELETE from tb_clientes where cpf = @cpfcliente
+	DELETE from tb_contas where id = @idConta
+	
+	SET @saida = 'Cliente e contas associadas excluidas com sucesso!'
+	GO
+
 
 
 DECLARE @out1 VARCHAR(MAX)
-EXEC sp_cria_cliente '11104823220', 'Julio', '312dogui', @out1 OUTPUT
+EXEC sp_cria_cliente '32323232321', 'Leoncio', 'lon12312', @out1 OUTPUT
 print(@out1)
 
 
 DECLARE @out2 VARCHAR(200)
-EXEC sp_cria_conta '38588813840', NULL, NULL, NULL, '1', 'C', @out2 OUTPUT
+EXEC sp_cria_conta '32323232321', NULL, NULL, NULL, '1', 'C', @out2 OUTPUT
 print @out2
 
 DECLARE @out3 VARCHAR(200)
 EXEC sp_cria_conta '11104823220', '11104723220', 'Paulo', '123dogui', '1', 'P', @out3 OUTPUT
 print @out3
 
+declare @out4 varchar(200)
+exec sp_atualiza_senha '38588813840', 'doguinho', @out4 OUTPUT
+print @out4
 
-DROP PROCEDURE sp_insere_segundo_titular
+declare @out5 varchar(200)
+exec sp_atualiza_saldo '18407120', 10231.20, @out5 output
+print @out5
+
+declare @out6 varchar(200)
+exec sp_atualiza_limite'18407120', 3000.00, @out6 output
+print @out6
+
+declare @out7 varchar(200)
+exec sp_atualiza_rendimento'12202202', 0.49, @out7 output
+print @out7
+
+declare @out8 varchar(200)
+exec sp_deleta_cliente '32323232321', '13211', @out8 output
+print @out8
+
+DROP PROCEDURE sp_deleta_cliente
 
 
 select * from tb_clientes
