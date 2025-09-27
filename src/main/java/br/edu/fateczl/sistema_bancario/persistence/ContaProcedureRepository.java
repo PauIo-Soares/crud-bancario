@@ -39,7 +39,6 @@ public class ContaProcedureRepository {
         //{call sp_atualizar_rendimento}
     }
 
-
     public void excluirConta() {
         //{call sp_excluir_conta}
     }
