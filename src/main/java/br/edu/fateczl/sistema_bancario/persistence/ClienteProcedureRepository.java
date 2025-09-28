@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Types;
+
 @Repository
 public class ClienteProcedureRepository {
 
@@ -22,13 +24,14 @@ public class ClienteProcedureRepository {
         });
     }
 
-    public String alterarSenha(String cpf, String senha) {
-        return jdbcTemplate.execute("{call sp_atualiza_senha(?, ?, ?)}", (CallableStatementCallback<String>) cs -> {
+    public String alterarSenha(String cpf, String senhaAtual, String novaSenha) {
+        return jdbcTemplate.execute("{call sp_atualiza_senha(?, ?, ?, ?)}", (CallableStatementCallback<String>) cs -> {
             cs.setString(1, cpf);
-            cs.setString(2, senha);
-            cs.registerOutParameter(3, java.sql.Types.VARCHAR);
+            cs.setString(2, senhaAtual);
+            cs.setString(3, novaSenha);
+            cs.registerOutParameter(4, java.sql.Types.VARCHAR);
             cs.execute();
-            return cs.getString(3);
+            return cs.getString(4);
         });
     }
 
@@ -38,6 +41,16 @@ public class ClienteProcedureRepository {
             cs.registerOutParameter(2, java.sql.Types.VARCHAR);
             cs.execute();
             return cs.getString(2);
+        });
+    }
+
+    public boolean autenticarCliente(String cpf, String senha) {
+        return jdbcTemplate.execute("{call sp_autentica_cliente(?, ?, ?)}", (CallableStatementCallback<Boolean>) cs -> {
+            cs.setString(1, cpf);
+            cs.setString(2, senha);
+            cs.registerOutParameter(3, Types.BIT);
+            cs.execute();
+            return cs.getBoolean(3);
         });
     }
 }

@@ -1,7 +1,7 @@
-use db_sistema_bancario
-go
+USE db_sistema_bancario
+GO
 
-Create procedure sp_valida_senha(
+CREATE PROCEDURE sp_valida_senha(
 @senha VARCHAR(8), @valido BIT OUTPUT)
 AS
 	DECLARE @i INT = 1, @totalNum INT = 0, @char char(1)
@@ -28,7 +28,7 @@ AS
 	GO
 
 
-Create procedure sp_cria_codigo_conta(
+CREATE PROCEDURE sp_cria_codigo_conta(
 @cpfcliente VARCHAR(11), @cpfconjunto VARCHAR(11), @agencia VARCHAR(10), @codigo varchar(20) OUTPUT)
 AS
 	DECLARE @totalCPF1 INT = 0, @digito int = 0, @i INT = 1
@@ -58,7 +58,7 @@ AS
 	GO
 
 
-Create procedure sp_cria_cliente(
+CREATE PROCEDURE sp_cria_cliente(
 @cpf VARCHAR(11), @nome VARCHAR(100), @senha VARCHAR(8), @saida varchar(200) OUTPUT)
 AS
 	DECLARE @erro		VARCHAR(MAX), @valido BIT
@@ -91,24 +91,24 @@ AS
 	GO
 
 
-	CREATE procedure sp_insere_titulares(
-@cpfcliente varchar(11), @cpfconjunto varchar(11), @IDConta int, @saida VARCHAR(100) OUTPUT)
+	CREATE PROCEDURE sp_insere_titulares(
+@cpfcliente VARCHAR(11), @cpfconjunto VARCHAR(11), @IDConta int, @saida VARCHAR(100) OUTPUT)
 AS
 	IF(@cpfconjunto IS NULL)
 	BEGIN
-		INSERT INTO tb_titulares_conta(cliente_id, conta_id) values (@cpfcliente, @IDConta)
+		INSERT INTO tb_titulares_conta(cliente_id, conta_id) VALUES (@cpfcliente, @IDConta)
 		SET @saida = ' Inserido em titulares com sucesso!'
 	END
 	ELSE
 	BEGIN
-		INSERT INTO tb_titulares_conta(cliente_id, conta_id) values (@cpfcliente, @IDConta)
-		INSERT INTO tb_titulares_conta(cliente_id, conta_id) values (@cpfconjunto, @IDConta)
+		INSERT INTO tb_titulares_conta(cliente_id, conta_id) VALUES (@cpfcliente, @IDConta)
+		INSERT INTO tb_titulares_conta(cliente_id, conta_id) VALUES (@cpfconjunto, @IDConta)
 		SET @saida = ' Inseridos em titulares com sucesso!'
 	END
 	GO
 
 
-Create procedure sp_cria_conta(
+CREATE PROCEDURE sp_cria_conta(
 @cpfcliente VARCHAR(11), @cpfconjunto VARCHAR(11), @nomeConjunto VARCHAR(100), @senhaConjunto VARCHAR(8), @agencia VARCHAR(10), @opcaoConta CHAR(1), @saida VARCHAR(200) OUTPUT)
 AS
 	DECLARE @dataAniversario date, @codigo VARCHAR(20), @maxID int
@@ -182,7 +182,7 @@ AS
 
 
 CREATE PROCEDURE sp_insere_segundo_titular(
-@cpfcliente varchar(11), @cpfconjunto varchar(11), @nome varchar(100), @senha varchar(100), @codigo varchar(20), @data_abertura date, @saida varchar(200) OUTPUT)
+@cpfcliente VARCHAR(11), @cpfconjunto VARCHAR(11), @nome VARCHAR(100), @senha VARCHAR(100), @codigo VARCHAR(20), @data_abertura date, @saida VARCHAR(200) OUTPUT)
 AS
 	DECLARE @saldo decimal(10,2)
 	SELECT @saldo = saldo from tb_contas where codigo = @codigo
@@ -193,7 +193,7 @@ AS
 	END
 	ELSE
 	BEGIN
-		DECLARE @idConta int, @agencia varchar(10), @codConta varchar(20)
+		DECLARE @idConta int, @agencia VARCHAR(10), @codConta VARCHAR(20)
 		SELECT @idConta = conta_id from tb_titulares_conta where cliente_id = @cpfcliente
 		SELECT @agencia = agencia_id from tb_contas where id = @idConta
 		exec sp_cria_cliente @cpfconjunto, @nome, @senha, @saida OUTPUT
@@ -210,59 +210,70 @@ AS
 	GO
 
 
-CREATE Procedure sp_atualiza_senha(
-@cpfcliente varchar(11), @novaSenha varchar(30), @saida varchar(200) OUTPUT)
+CREATE PROCEDURE sp_atualiza_senha(
+@cpfcliente VARCHAR(11), @senhaAtual VARCHAR(30), @novaSenha VARCHAR(30), @saida VARCHAR(200) OUTPUT)
 AS
+    SET NOCOUNT ON;
+
 	IF(@cpfcliente IS NULL or @novaSenha IS NULL)
 	BEGIN
 		RAISERROR('Todos os campos precisam estar preenchidos!',16,1)
 		RETURN
 	END
+
+	DECLARE @autenticado BIT;
+	EXEC sp_autentica_cliente @cpfcliente, @senhaAtual, @autenticado OUTPUT;
+	IF @autenticado = 0
+	BEGIN
+		SET @saida = 'Senha atual incorreta';
+		RETURN;
+	END
+
 	UPDATE tb_clientes
 	SET senha = @novaSenha
-	where cpf = @cpfcliente
+	WHERE cpf = @cpfcliente
 	SET @saida = 'Senha do cliente de cpf ' + @cpfcliente + ' atualizada!'
 	GO
 
 
-CREATE Procedure sp_atualiza_saldo(
-@codigo varchar(20), @saldo decimal(10,2), @saida varchar(200) output)
+CREATE PROCEDURE sp_atualiza_saldo(
+@codigo VARCHAR(20), @saldo decimal(10,2), @saida VARCHAR(200) output)
 AS
 	DECLARE @idConta int
 	SELECT @idConta = id from tb_contas where codigo = @codigo
 	UPDATE tb_contas
 	set saldo = @saldo
 	where id = @idConta
-	set @saida = 'Saldo da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
+	set @saida = 'Saldo da conta ' + cast(@idConta as VARCHAR(20)) + ' atualizado com sucesso.'
 	GO
 
 
-CREATE Procedure sp_atualiza_limite(
-@codigo varchar(20), @novoLimite decimal(10,2), @saida varchar(200) OUTPUT)
+CREATE PROCEDURE sp_atualiza_limite(
+@codigo VARCHAR(20), @novoLimite decimal(10,2), @saida VARCHAR(200) OUTPUT)
 AS
 	DECLARE @idConta int
 	SELECT @idConta = id from tb_contas where codigo = @codigo
 	UPDATE tb_contas_correntes
 	SET limite_credito = @novoLimite
 	where id = @idConta
-	set @saida = 'Limite da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
+	set @saida = 'Limite da conta ' + cast(@idConta as VARCHAR(20)) + ' atualizado com sucesso.'
 	GO
 
 
-CREATE Procedure sp_atualiza_rendimento(
-@codigo varchar(20), @novoRendimento decimal(3,3), @saida varchar(200) OUTPUT)
+CREATE PROCEDURE sp_atualiza_rendimento(
+@codigo VARCHAR(20), @novoRendimento decimal(3,3), @saida VARCHAR(200) OUTPUT)
 AS
 	DECLARE @idConta int
 	SELECT @idConta = id from tb_contas where codigo = @codigo
 	UPDATE tb_contas_poupancas
 	SET rendimento = @novoRendimento
 	where id = @idConta
-	set @saida = 'Rendimento da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
+	set @saida = 'Rendimento da conta ' + cast(@idConta as VARCHAR(20)) + ' atualizado com sucesso.'
 	GO
 
 
-CREATE Procedure sp_deleta_cliente(
-@cpfcliente varchar(11), @saida varchar(200) output)
+CREATE PROCEDURE sp_deleta_cliente(
+@cpfcliente VARCHAR(11), @saida VARCHAR(200) output)
 AS
 	SET NOCOUNT ON
 	DECLARE @idConta int
@@ -274,7 +285,7 @@ AS
 		HAVING COUNT(*) > 1
 	)
 	BEGIN
-		RAISERROR ('Nao se pode excluir uma conta conjunta!', 16, 1)
+		RAISERROR ('Clientes com contas conjuntas não podem ser excluídos da base.', 16, 1)
 		RETURN
 	END
 
@@ -314,5 +325,25 @@ BEGIN
     DELETE FROM tb_contas WHERE id = @idConta;
 
     SET @saida = 'Conta e registros associados deletados com sucesso!';
+END
+GO
+
+CREATE PROCEDURE sp_autentica_cliente(
+    @cpf VARCHAR(11),
+    @senha VARCHAR(100),
+    @saida BIT OUTPUT)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1
+        FROM tb_clientes
+        WHERE cpf = @cpf
+          AND senha = @senha
+    )
+        SET @saida = 1;
+    ELSE
+        SET @saida = 0;
 END
 GO

@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class AlterarSenhaDTO {
+    private LoginDTO login;
     private String novaSenha;
 }

@@ -1,5 +1,6 @@
 package br.edu.fateczl.sistema_bancario.service;
 
+import br.edu.fateczl.sistema_bancario.dto.AlterarSenhaDTO;
 import br.edu.fateczl.sistema_bancario.dto.ClienteDTO;
 import br.edu.fateczl.sistema_bancario.dto.ClienteNovoDTO;
 import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
@@ -40,8 +41,8 @@ public class ClienteService {
         return clienteRepository.findById(cpf).orElse(null);
     }
 
-    public String alterarSenha(String cpf, String novaSenha) {
-        return clienteProcedureRepository.alterarSenha(cpf, novaSenha);
+    public String alterarSenha(AlterarSenhaDTO dto) {
+        return clienteProcedureRepository.alterarSenha(dto.getLogin().getCpf(), dto.getLogin().getSenha(), dto.getNovaSenha());
     }
 
     public String excluirCliente(String cpf) {
@@ -60,7 +61,6 @@ public class ClienteService {
     }
 
     public boolean isAutenticado(String cpf, String senha) {
-        Cliente cliente = clienteRepository.findById(cpf).orElse(null);
-        return cliente != null && cliente.getSenha().equals(senha);
+        return clienteProcedureRepository.autenticarCliente(cpf, senha);
     }
 }

@@ -27,9 +27,9 @@ public class ClienteController {
         return clienteService.buscarCliente(cpf);
     }
 
-    @PutMapping("/{cpf}")
-    public String alterarSenha(@PathVariable String cpf, @RequestBody AlterarSenhaDTO senha) {
-        return clienteService.alterarSenha(cpf, senha.getNovaSenha());
+    @PutMapping("/alterar-senha")
+    public String alterarSenha(@RequestBody AlterarSenhaDTO dto) {
+        return clienteService.alterarSenha(dto);
     }
 
     @DeleteMapping("/{cpf}")
