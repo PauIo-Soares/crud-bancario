@@ -3,7 +3,6 @@ package br.edu.fateczl.sistema_bancario.controller;
 import br.edu.fateczl.sistema_bancario.dto.AtualizarContaDTO;
 import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
 import br.edu.fateczl.sistema_bancario.dto.CriarContaDTO;
-import br.edu.fateczl.sistema_bancario.model.Conta;
 import br.edu.fateczl.sistema_bancario.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,14 +41,13 @@ public class ContaController {
         return contaService.atualizarRendimento(conta);
     }
 
-    @DeleteMapping("/{id}")
-    public String excluirConta(@PathVariable Long id) {
-        contaService.excluirConta(id);
-        return "Conta excluida com sucesso";
+    @DeleteMapping("/{codigo}")
+    public String excluirConta(@PathVariable String codigo) {
+        return contaService.excluirConta(codigo);
     }
 
     @GetMapping
-    public List<Conta> listarContas() {
+    public List<ContaDTO> listarContas() {
         return contaService.listarContas();
     }
 

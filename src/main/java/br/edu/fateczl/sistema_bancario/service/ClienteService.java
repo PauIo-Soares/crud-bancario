@@ -1,14 +1,18 @@
 package br.edu.fateczl.sistema_bancario.service;
 
+import br.edu.fateczl.sistema_bancario.dto.ClienteDTO;
 import br.edu.fateczl.sistema_bancario.dto.ClienteNovoDTO;
+import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
 import br.edu.fateczl.sistema_bancario.enums.TipoConta;
 import br.edu.fateczl.sistema_bancario.model.Cliente;
+import br.edu.fateczl.sistema_bancario.model.Conta;
 import br.edu.fateczl.sistema_bancario.persistence.ClienteProcedureRepository;
 import br.edu.fateczl.sistema_bancario.persistence.ClienteRepository;
 import br.edu.fateczl.sistema_bancario.persistence.ContaProcedureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,15 +45,21 @@ public class ClienteService {
     }
 
     public String excluirCliente(String cpf) {
-        clienteProcedureRepository.excluirCliente(cpf);
-        return "Cliente excluído com sucesso";
+        return clienteProcedureRepository.excluirCliente(cpf);
     }
 
-    public List<Cliente> listarClientes() {
-        return clienteRepository.findAll();
+    public List<ClienteDTO> listarClientes() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        List<ClienteDTO> clientesDTO = new ArrayList<>();
+
+        for (Cliente cliente : clientes) {
+            ClienteDTO dto = new ClienteDTO(cliente.getCpf(), cliente.getNome(), cliente.getDataPrimeiraConta());
+            clientesDTO.add(dto);
+        }
+        return clientesDTO;
     }
 
-    //TODO autenticar
+//    TODO autenticar
 //   public void autenticar(){
 //
 //   }

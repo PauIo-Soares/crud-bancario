@@ -10,6 +10,7 @@ import br.edu.fateczl.sistema_bancario.persistence.ContaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,14 +44,19 @@ public class ContaService {
         return contaProcedureRepository.atualizarRendimento(conta.getCodigo(), conta.getRendimento());
     }
 
-    public String excluirConta(Long id) {
-        // procedure
-        contaProcedureRepository.excluirConta();
-        return "Conta excluída com sucesso";
+    public String excluirConta(String codigo) {
+        return contaProcedureRepository.excluirConta(codigo);
     }
 
-    public List<Conta> listarContas() {
-        return contaRepository.findAll();
+    public List<ContaDTO> listarContas() {
+        List<Conta> contas = contaRepository.findAll();
+        List<ContaDTO> contasDTO = new ArrayList<>();
+
+        for (Conta conta : contas) {
+            ContaDTO dto = new ContaDTO(conta.getId(), conta.getCodigo(), conta.getDataAbertura(), conta.getSaldo());
+            contasDTO.add(dto);
+        }
+        return contasDTO;
     }
 
 //    public void adicionarSegundoTitular(Long id, String codigoCliente) {

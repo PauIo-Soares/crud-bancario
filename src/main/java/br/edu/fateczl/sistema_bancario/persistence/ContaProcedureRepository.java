@@ -73,8 +73,13 @@ public class ContaProcedureRepository {
         });
     }
 
-    public void excluirConta() {
-        //{call sp_excluir_conta}
+    public String excluirConta(String codigo) {
+        return jdbcTemplate.execute("{call sp_deleta_conta(?, ?)}", (CallableStatementCallback<String>) cs -> {
+            cs.setString(1, codigo);
+            cs.registerOutParameter(2, java.sql.Types.VARCHAR);
+            cs.execute();
+            return cs.getString(2);
+        });
     }
 
     public void adicionarSegundoTitular() {

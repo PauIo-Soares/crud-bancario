@@ -286,3 +286,31 @@ AS
 	SET @saida = 'Cliente e contas associadas excluidas com sucesso!'
 	GO
 
+CREATE PROCEDURE sp_deleta_conta(
+@codigo VARCHAR(20),
+@saida VARCHAR(200) OUTPUT)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idConta INT;
+
+    SELECT @idConta = id
+    FROM tb_contas
+    WHERE codigo = @codigo;
+
+    IF @idConta IS NULL
+    BEGIN
+        SET @saida = 'Conta não encontrada!';
+        RETURN;
+    END
+
+    DELETE FROM tb_contas_correntes WHERE id = @idConta;
+    DELETE FROM tb_contas_poupancas WHERE id = @idConta;
+    DELETE FROM tb_titulares_conta WHERE conta_id = @idConta;
+
+    DELETE FROM tb_contas WHERE id = @idConta;
+
+    SET @saida = 'Conta e registros associados deletados com sucesso!';
+END
+GO

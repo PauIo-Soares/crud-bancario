@@ -1,6 +1,7 @@
 package br.edu.fateczl.sistema_bancario.controller;
 
 import br.edu.fateczl.sistema_bancario.dto.AlterarSenhaDTO;
+import br.edu.fateczl.sistema_bancario.dto.ClienteDTO;
 import br.edu.fateczl.sistema_bancario.dto.ClienteNovoDTO;
 import br.edu.fateczl.sistema_bancario.model.Cliente;
 import br.edu.fateczl.sistema_bancario.service.ClienteService;
@@ -37,7 +38,7 @@ public class ClienteController {
     }
 
     @GetMapping
-    public List<Cliente> listarClientes() {
+    public List<ClienteDTO> listarClientes() {
         return clienteService.listarClientes();
     }
 
