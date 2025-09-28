@@ -59,8 +59,8 @@ public class ClienteService {
         return clientesDTO;
     }
 
-//    TODO autenticar
-//   public void autenticar(){
-//
-//   }
+    public boolean isAutenticado(String cpf, String senha) {
+        Cliente cliente = clienteRepository.findById(cpf).orElse(null);
+        return cliente != null && cliente.getSenha().equals(senha);
+    }
 }

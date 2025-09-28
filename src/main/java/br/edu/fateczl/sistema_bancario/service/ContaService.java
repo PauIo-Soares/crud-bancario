@@ -1,8 +1,6 @@
 package br.edu.fateczl.sistema_bancario.service;
 
-import br.edu.fateczl.sistema_bancario.dto.AtualizarContaDTO;
-import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
-import br.edu.fateczl.sistema_bancario.dto.CriarContaDTO;
+import br.edu.fateczl.sistema_bancario.dto.*;
 import br.edu.fateczl.sistema_bancario.enums.TipoConta;
 import br.edu.fateczl.sistema_bancario.model.Conta;
 import br.edu.fateczl.sistema_bancario.persistence.ContaProcedureRepository;
@@ -10,6 +8,7 @@ import br.edu.fateczl.sistema_bancario.persistence.ContaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +17,9 @@ public class ContaService {
 
     @Autowired
     private ContaRepository contaRepository;
+
+    @Autowired
+    private ClienteService clienteService;
 
     @Autowired
     private ContaProcedureRepository contaProcedureRepository;
@@ -59,14 +61,19 @@ public class ContaService {
         return contasDTO;
     }
 
-//    public void adicionarSegundoTitular(Long id, String codigoCliente) {
-//        // TODO
-//        contaProcedureRepository.adicionarSegundoTitular();
-//    }
-//
-//    public Conta buscarDadosContas(String cpf) {
-//        //Da pra fazer sem procedure eu acho
-//        //TODO basicamente pegar do banco e montar um DTO pra jogar, seria tipo um find all by cpf
-//        return null;
-//    }
+    public String adicionarSegundoTitular(LoginDTO login, AdicionarSegundoTitularDTO segundoTitularDTO) {
+        boolean autenticado = clienteService.isAutenticado(login.getCpf(), login.getSenha());
+        if (!autenticado) {
+            throw new RuntimeException("Login do titular principal inválido.");
+        }
+        return contaProcedureRepository.adicionarSegundoTitular(segundoTitularDTO);
+    }
+
+    public List<ContaDTO> buscarDadosContas(LoginDTO login) {
+        boolean autenticado = clienteService.isAutenticado(login.getCpf(), login.getSenha());
+        if (!autenticado) {
+            throw new RuntimeException("Login inválido.");
+        }
+        return contaProcedureRepository.findByClienteCpf(login.getCpf());
+    }
 }

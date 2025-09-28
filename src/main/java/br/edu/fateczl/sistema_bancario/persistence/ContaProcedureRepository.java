@@ -1,11 +1,14 @@
 package br.edu.fateczl.sistema_bancario.persistence;
 
+import br.edu.fateczl.sistema_bancario.dto.AdicionarSegundoTitularDTO;
+import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public class ContaProcedureRepository {
@@ -82,7 +85,34 @@ public class ContaProcedureRepository {
         });
     }
 
-    public void adicionarSegundoTitular() {
-        //{call sp_adicionar_titular_conta}
+    public String adicionarSegundoTitular(AdicionarSegundoTitularDTO segundoTitularDTO) {
+        return jdbcTemplate.execute("{call sp_insere_segundo_titular(?, ?, ?, ?, ?, ?, ?)}", (CallableStatementCallback<String>) cs -> {
+            cs.setString(1, segundoTitularDTO.getCpfCliente());
+            cs.setString(2, segundoTitularDTO.getCpfConjunto());
+            cs.setString(3, segundoTitularDTO.getNome());
+            cs.setString(4, segundoTitularDTO.getSenha());
+            cs.setString(5, segundoTitularDTO.getCodigoConta());
+            cs.setDate(6, java.sql.Date.valueOf(segundoTitularDTO.getDataAbertura()));
+            cs.registerOutParameter(7, java.sql.Types.VARCHAR);
+            cs.execute();
+            return cs.getString(7);
+        });
+    }
+
+    public List<ContaDTO> findByClienteCpf(String cpf) {
+        String sql = """
+                    SELECT c.id, c.codigo, c.saldo, c.data_abertura, c.agencia_id
+                    FROM tb_contas c
+                    INNER JOIN tb_titulares_conta tc ON c.id = tc.conta_id
+                    WHERE tc.cliente_id = ?
+                """;
+        return jdbcTemplate.query(sql, ps -> ps.setString(1, cpf), (rs, rowNum) -> {
+            ContaDTO conta = new ContaDTO();
+            conta.setId(rs.getLong("id"));
+            conta.setCodigo(rs.getString("codigo"));
+            conta.setSaldo(rs.getBigDecimal("saldo"));
+            conta.setDataAbertura(rs.getDate("data_abertura").toLocalDate());
+            return conta;
+        });
     }
 }

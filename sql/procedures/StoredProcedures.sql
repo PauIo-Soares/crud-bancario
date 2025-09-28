@@ -27,6 +27,7 @@ AS
 	SET @valido = 0
 	GO
 
+
 Create procedure sp_cria_codigo_conta(
 @cpfcliente VARCHAR(11), @cpfconjunto VARCHAR(11), @agencia VARCHAR(10), @codigo varchar(20) OUTPUT)
 AS
@@ -55,7 +56,6 @@ AS
 		RETURN
 	END
 	GO
-
 
 
 Create procedure sp_cria_cliente(
@@ -89,6 +89,7 @@ AS
 		END
 	END
 	GO
+
 
 	CREATE procedure sp_insere_titulares(
 @cpfcliente varchar(11), @cpfconjunto varchar(11), @IDConta int, @saida VARCHAR(100) OUTPUT)
@@ -180,8 +181,6 @@ AS
 	GO
 
 
-
-
 CREATE PROCEDURE sp_insere_segundo_titular(
 @cpfcliente varchar(11), @cpfconjunto varchar(11), @nome varchar(100), @senha varchar(100), @codigo varchar(20), @data_abertura date, @saida varchar(200) OUTPUT)
 AS
@@ -237,6 +236,7 @@ AS
 	set @saida = 'Saldo da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
 	GO
 
+
 CREATE Procedure sp_atualiza_limite(
 @codigo varchar(20), @novoLimite decimal(10,2), @saida varchar(200) OUTPUT)
 AS
@@ -247,6 +247,7 @@ AS
 	where id = @idConta
 	set @saida = 'Limite da conta ' + cast(@idConta as varchar(20)) + ' atualizado com sucesso.'
 	GO
+
 
 CREATE Procedure sp_atualiza_rendimento(
 @codigo varchar(20), @novoRendimento decimal(3,3), @saida varchar(200) OUTPUT)
@@ -285,6 +286,7 @@ AS
 
 	SET @saida = 'Cliente e contas associadas excluidas com sucesso!'
 	GO
+
 
 CREATE PROCEDURE sp_deleta_conta(
 @codigo VARCHAR(20),

@@ -16,7 +16,7 @@
 	<packaging>jar</packaging>
 	<name>sistema-bancario</name>
 	<description>Sistema bancario web com CRUD de Agências, Clientes e Contas via Stored Procedures.</description>
-	<url>https://github.com/seuusuario/sistema-bancario</url>
+	<url>https://github.com/Paulo-Soares/crud-bancario</url>
 	<organization>
 		<name>FATEC ZL</name>
 		<url>https://www.fateczl.edu.br</url>
@@ -24,16 +24,16 @@
 	<developers>
 		<developer>
 			<id>paulo</id>
-			<name>Paulo Henrique Soares de Araújo</name>
-			<email>paulo@email.com</email>
+			<name>Paulo Araujo</name>
+			<email>paulo.araujo41@fatec.sp.gov.br</email>
 			<roles>
 				<role>Developer</role>
 			</roles>
 		</developer>
 		<developer>
-			<id>amigo</id>
-			<name>Nome do seu amigo</name>
-			<email>amigo@email.com</email>
+			<id>julio</id>
+			<name>Julio Cesar</name>
+			<email>N/A</email>
 			<roles>
 				<role>Developer</role>
 			</roles>

@@ -41,15 +41,4 @@ public class ClienteController {
     public List<ClienteDTO> listarClientes() {
         return clienteService.listarClientes();
     }
-
-//TODO
-//    @PostMapping("/login")
-//    public String autenticar(@RequestBody LoginDTO login) {
-//        boolean autenticado = clienteService.autenticar(login.getCpf(), login.getSenha());
-//        if (autenticado) {
-//            return "Login realizado com sucesso!";
-//        } else {
-//            return "CPF ou senha incorretos!";
-//        }
-//    }
 }
