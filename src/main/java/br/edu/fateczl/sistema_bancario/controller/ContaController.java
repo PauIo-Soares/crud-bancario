@@ -1,5 +1,8 @@
 package br.edu.fateczl.sistema_bancario.controller;
 
+import br.edu.fateczl.sistema_bancario.dto.AtualizarContaDTO;
+import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
+import br.edu.fateczl.sistema_bancario.dto.CriarContaDTO;
 import br.edu.fateczl.sistema_bancario.model.Conta;
 import br.edu.fateczl.sistema_bancario.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,33 +17,29 @@ public class ContaController {
     @Autowired
     private ContaService contaService;
 
-//    @PostMapping
-//    public String criarConta(@RequestBody Conta conta) {
-//        contaService.criarConta(conta);
-//        return "Conta inserido com sucesso";
-//    }
+    @PostMapping
+    public String criarConta(@RequestBody CriarContaDTO conta) {
+        return contaService.criarConta(conta);
+    }
 
-    @GetMapping("/{id}")
-    public Conta buscarConta(@PathVariable Long id) {
-        return contaService.buscarConta(id);
+    @GetMapping("/{codigo}")
+    public ContaDTO buscarConta(@PathVariable String codigo) {
+        return contaService.buscarConta(codigo);
     }
 
     @PutMapping("/saldo")
-    public String atualizarSaldo(@RequestBody Conta conta) {
-        contaService.atualizarSaldo(conta);
-        return "Conta alterada com sucesso";
+    public String atualizarSaldo(@RequestBody AtualizarContaDTO conta) {
+        return contaService.atualizarSaldo(conta);
     }
 
     @PutMapping("/limite")
-    public String atualizarLimite(@RequestBody Conta conta) {
-        contaService.atualizarLimite(conta);
-        return "Conta alterada com sucesso";
+    public String atualizarLimite(@RequestBody AtualizarContaDTO conta) {
+        return contaService.atualizarLimite(conta);
     }
 
     @PutMapping("/rendimento")
-    public String atualizarRendimento(@RequestBody Conta conta) {
-        contaService.atualizarRendimento(conta);
-        return "Conta alterada com sucesso";
+    public String atualizarRendimento(@RequestBody AtualizarContaDTO conta) {
+        return contaService.atualizarRendimento(conta);
     }
 
     @DeleteMapping("/{id}")

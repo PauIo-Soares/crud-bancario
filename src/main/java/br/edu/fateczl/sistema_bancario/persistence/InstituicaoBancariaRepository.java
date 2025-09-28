@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InstituicaoBancariaRepository extends JpaRepository<InstituicaoBancaria, Long> {}
+public interface InstituicaoBancariaRepository extends JpaRepository<InstituicaoBancaria, Long> {
+}

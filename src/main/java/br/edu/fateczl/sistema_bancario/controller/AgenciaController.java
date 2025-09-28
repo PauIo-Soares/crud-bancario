@@ -1,7 +1,7 @@
 package br.edu.fateczl.sistema_bancario.controller;
 
 import br.edu.fateczl.sistema_bancario.dto.AgenciaDTO;
-import br.edu.fateczl.sistema_bancario.model.Agencia;
+
 import br.edu.fateczl.sistema_bancario.service.AgenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +37,7 @@ public class AgenciaController {
         agenciaService.excluirAgencia(codigo);
         return "Agencia excluida com sucesso";
     }
+
     @GetMapping
     public List<AgenciaDTO> listarAgencias() {
         return agenciaService.listarAgencias();

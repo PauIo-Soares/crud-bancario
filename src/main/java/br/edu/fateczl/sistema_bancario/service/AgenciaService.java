@@ -32,15 +32,9 @@ public class AgenciaService {
         agenciaRepository.save(entidade);
     }
 
-    public AgenciaDTO buscarAgencia(Long codigo){
+    public AgenciaDTO buscarAgencia(Long codigo) {
         Agencia agencia = agenciaRepository.findById(codigo).orElseThrow(() -> new RuntimeException("Agencia não encontrada"));
-        return new AgenciaDTO(
-                agencia.getCodigo(),
-                agencia.getNome(),
-                agencia.getCep(),
-                agencia.getCidade(),
-                codigo
-        );
+        return new AgenciaDTO(agencia.getCodigo(), agencia.getNome(), agencia.getCep(), agencia.getCidade(), codigo);
     }
 
     public void modificarAgencia(AgenciaDTO dto) {
@@ -60,13 +54,7 @@ public class AgenciaService {
         List<AgenciaDTO> resposta = new ArrayList<>();
 
         for (Agencia i : listaEntidades) {
-            resposta.add(new AgenciaDTO(
-                    i.getCodigo(),
-                    i.getNome(),
-                    i.getCep(),
-                    i.getCidade(),
-                    i.getCodigo()
-            ));
+            resposta.add(new AgenciaDTO(i.getCodigo(), i.getNome(), i.getCep(), i.getCidade(), i.getCodigo()));
         }
         return resposta;
     }

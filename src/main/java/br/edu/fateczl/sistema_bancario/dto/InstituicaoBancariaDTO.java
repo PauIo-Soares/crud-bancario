@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class InstituicaoBancariaDTO {
-        private Long codigo;
-        private String nome;
-        private String cep;
-        private String cidade;
+    private Long codigo;
+    private String nome;
+    private String cep;
+    private String cidade;
 }

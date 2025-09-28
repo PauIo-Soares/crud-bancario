@@ -26,10 +26,6 @@ public abstract class Conta {
     @JoinColumn(name = "agencia_id", nullable = false)
     private Agencia agencia;
     @ManyToMany
-    @JoinTable(
-            name = "tb_titulares_conta",
-            joinColumns = @JoinColumn(name = "conta_id"),
-            inverseJoinColumns = @JoinColumn(name = "cliente_id")
-    )
+    @JoinTable(name = "tb_titulares_conta", joinColumns = @JoinColumn(name = "conta_id"), inverseJoinColumns = @JoinColumn(name = "cliente_id"))
     private List<Cliente> titulares;
 }

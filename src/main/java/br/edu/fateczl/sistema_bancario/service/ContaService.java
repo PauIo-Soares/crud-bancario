@@ -1,5 +1,9 @@
 package br.edu.fateczl.sistema_bancario.service;
 
+import br.edu.fateczl.sistema_bancario.dto.AtualizarContaDTO;
+import br.edu.fateczl.sistema_bancario.dto.ContaDTO;
+import br.edu.fateczl.sistema_bancario.dto.CriarContaDTO;
+import br.edu.fateczl.sistema_bancario.enums.TipoConta;
 import br.edu.fateczl.sistema_bancario.model.Conta;
 import br.edu.fateczl.sistema_bancario.persistence.ContaProcedureRepository;
 import br.edu.fateczl.sistema_bancario.persistence.ContaRepository;
@@ -17,34 +21,26 @@ public class ContaService {
     @Autowired
     private ContaProcedureRepository contaProcedureRepository;
 
-//    public String criarConta(Conta conta) {
-//        return contaProcedureRepository.criarConta( //TODO
-//                conta.getDataAbertura(),
-//                conta.getSaldo(),
-//                conta.getAgencia().getCodigo()
-//        );
-//    }
-
-    public Conta buscarConta(Long id){
-        return contaRepository.findById(id).orElse(null);
+    public String criarConta(CriarContaDTO conta) {
+        String tipoContaDb = conta.getTipoConta() == TipoConta.CORRENTE ? "C" : "P";
+        return contaProcedureRepository.criarConta(conta.getCpf(), conta.getCpfConjunto(), conta.getNomeConjunto(), conta.getSenhaConjunta(), conta.getCodigoAgencia(), tipoContaDb);
     }
 
-    public String atualizarSaldo(Conta conta) {
-        // procedure
-        contaProcedureRepository.atualizarSaldo();
-        return "Dados da conta alterados com sucesso";
+    public ContaDTO buscarConta(String codigo) {
+        Conta conta = contaRepository.findByCodigo(codigo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+        return new ContaDTO(conta.getId(), conta.getCodigo(), conta.getDataAbertura(), conta.getSaldo());
     }
 
-    public String atualizarLimite(Conta conta) {
-        // procedure
-        contaProcedureRepository.atualizarLimite();
-        return "Dados da conta alterados com sucesso";
+    public String atualizarSaldo(AtualizarContaDTO conta) {
+        return contaProcedureRepository.atualizarSaldo(conta.getCodigo(), conta.getSaldo());
     }
 
-    public String atualizarRendimento(Conta conta) {
-        // procedure
-        contaProcedureRepository.atualizarRendimento();
-        return "Dados da conta alterados com sucesso";
+    public String atualizarLimite(AtualizarContaDTO conta) {
+        return contaProcedureRepository.atualizarLimite(conta.getCodigo(), conta.getLimite());
+    }
+
+    public String atualizarRendimento(AtualizarContaDTO conta) {
+        return contaProcedureRepository.atualizarRendimento(conta.getCodigo(), conta.getRendimento());
     }
 
     public String excluirConta(Long id) {

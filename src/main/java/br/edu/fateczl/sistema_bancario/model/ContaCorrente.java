@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "tb_contas_correntes")
 @Data
-public class ContaCorrente extends Conta{
+public class ContaCorrente extends Conta {
     @Column(nullable = false)
     private BigDecimal limiteCredito;
 }

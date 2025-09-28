@@ -26,12 +26,7 @@ public class InstituicaoBancariaService {
 
     public InstituicaoBancariaDTO buscarInstituicaoBancaria(Long codigo) {
         InstituicaoBancaria instituicao = instituicaoBancariaRepository.findById(codigo).orElseThrow(() -> new RuntimeException("Instituição Bancaria não encontrada"));
-        return new InstituicaoBancariaDTO(
-                instituicao.getCodigo(),
-                instituicao.getNome(),
-                instituicao.getCep(),
-                instituicao.getCidade()
-        );
+        return new InstituicaoBancariaDTO(instituicao.getCodigo(), instituicao.getNome(), instituicao.getCep(), instituicao.getCidade());
     }
 
     public void atualizarInstituicaoBancaria(InstituicaoBancariaDTO dto) {
@@ -51,12 +46,7 @@ public class InstituicaoBancariaService {
         List<InstituicaoBancariaDTO> resposta = new ArrayList<>();
 
         for (InstituicaoBancaria i : listaEntidades) {
-            resposta.add(new InstituicaoBancariaDTO(
-                    i.getCodigo(),
-                    i.getNome(),
-                    i.getCep(),
-                    i.getCidade()
-            ));
+            resposta.add(new InstituicaoBancariaDTO(i.getCodigo(), i.getNome(), i.getCep(), i.getCidade()));
         }
         return resposta;
     }
