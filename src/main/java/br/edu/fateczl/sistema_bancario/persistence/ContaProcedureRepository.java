@@ -5,24 +5,41 @@ import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 @Repository
 public class ContaProcedureRepository {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public String criarConta(LocalDate dataAbertura, BigDecimal saldo, Long agenciaId) {
+    public String criarConta(String cpf, String cpfConjunto, String nomeConjunto, String senhaConjunta, String idAgencia, String tipoConta) {
         return jdbcTemplate.execute(
-                "{call sp_criar_conta(?, ?, ?, ?)}",
+                "{call sp_cria_conta(?, ?, ?, ?, ?, ?, ?)}",
                 (CallableStatementCallback<String>) cs -> {
-                    cs.setDate(1, java.sql.Date.valueOf(dataAbertura));
-                    cs.setBigDecimal(2, saldo);
-                    cs.setLong(3, agenciaId);
-                    cs.registerOutParameter(4, java.sql.Types.VARCHAR);
+                    cs.setString(1, cpf);
+
+                    if (cpfConjunto == null) {
+                        cs.setNull(2, java.sql.Types.VARCHAR);
+                    } else {
+                        cs.setString(2, cpfConjunto);
+                    }
+
+                    if (nomeConjunto == null) {
+                        cs.setNull(3, java.sql.Types.VARCHAR);
+                    } else {
+                        cs.setString(3, nomeConjunto);
+                    }
+
+                    if (senhaConjunta == null) {
+                        cs.setNull(4, java.sql.Types.VARCHAR);
+                    } else {
+                        cs.setString(4, senhaConjunta);
+                    }
+
+                    cs.setString(5, idAgencia);
+                    cs.setString(6, tipoConta);
+                    cs.registerOutParameter(7, java.sql.Types.VARCHAR);
                     cs.execute();
-                    return cs.getString(4);
+                    return cs.getString(7);
                 }
         );
     }

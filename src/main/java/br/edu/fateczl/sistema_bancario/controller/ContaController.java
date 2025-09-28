@@ -14,11 +14,11 @@ public class ContaController {
     @Autowired
     private ContaService contaService;
 
-    @PostMapping
-    public String criarConta(@RequestBody Conta conta) {
-        contaService.criarConta(conta);
-        return "Conta inserido com sucesso";
-    }
+//    @PostMapping
+//    public String criarConta(@RequestBody Conta conta) {
+//        contaService.criarConta(conta);
+//        return "Conta inserido com sucesso";
+//    }
 
     @GetMapping("/{id}")
     public Conta buscarConta(@PathVariable Long id) {

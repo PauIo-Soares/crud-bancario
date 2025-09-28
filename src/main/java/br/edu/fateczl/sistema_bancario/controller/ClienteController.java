@@ -1,6 +1,7 @@
 package br.edu.fateczl.sistema_bancario.controller;
 
-
+import br.edu.fateczl.sistema_bancario.dto.AlterarSenhaDTO;
+import br.edu.fateczl.sistema_bancario.dto.ClienteNovoDTO;
 import br.edu.fateczl.sistema_bancario.model.Cliente;
 import br.edu.fateczl.sistema_bancario.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,8 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public String inserirCliente(@RequestBody Cliente cliente) {
-        clienteService.inserirCliente(cliente);
-        return "Cliente inserido com sucesso";
+    public String inserirCliente(@RequestBody ClienteNovoDTO cliente) {
+        return clienteService.inserirCliente(cliente);
     }
 
     @GetMapping("/{cpf}")
@@ -27,15 +27,13 @@ public class ClienteController {
     }
 
     @PutMapping("/{cpf}")
-    public String alterarSenha(@PathVariable String cpf, @RequestBody Cliente cliente) {
-        clienteService.alterarSenha(cliente);
-        return "Senha alterada com sucesso";
+    public String alterarSenha(@PathVariable String cpf, @RequestBody AlterarSenhaDTO senha) {
+        return clienteService.alterarSenha(cpf, senha.getNovaSenha());
     }
 
     @DeleteMapping("/{cpf}")
     public String excluirCliente(@PathVariable String cpf) {
-        clienteService.excluirCliente(cpf);
-        return "Cliente excluida com sucesso";
+        return clienteService.excluirCliente(cpf);
     }
 
     @GetMapping
@@ -43,7 +41,7 @@ public class ClienteController {
         return clienteService.listarClientes();
     }
 
-    //TODO
+//TODO
 //    @PostMapping("/login")
 //    public String autenticar(@RequestBody LoginDTO login) {
 //        boolean autenticado = clienteService.autenticar(login.getCpf(), login.getSenha());

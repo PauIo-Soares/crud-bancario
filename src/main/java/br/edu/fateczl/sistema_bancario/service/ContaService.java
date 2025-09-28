@@ -17,13 +17,13 @@ public class ContaService {
     @Autowired
     private ContaProcedureRepository contaProcedureRepository;
 
-    public String criarConta(Conta conta) {
-        return contaProcedureRepository.criarConta( //TODO
-                conta.getDataAbertura(),
-                conta.getSaldo(),
-                conta.getAgencia().getCodigo()
-        );
-    }
+//    public String criarConta(Conta conta) {
+//        return contaProcedureRepository.criarConta( //TODO
+//                conta.getDataAbertura(),
+//                conta.getSaldo(),
+//                conta.getAgencia().getCodigo()
+//        );
+//    }
 
     public Conta buscarConta(Long id){
         return contaRepository.findById(id).orElse(null);
