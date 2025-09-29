@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/api/cliente")
 public class ClienteController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}")
-    public Cliente buscarCliente(@PathVariable String cpf) {
+    public ClienteDTO buscarCliente(@PathVariable String cpf) {
         return clienteService.buscarCliente(cpf);
     }
 

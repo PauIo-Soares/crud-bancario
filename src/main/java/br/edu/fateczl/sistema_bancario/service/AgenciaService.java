@@ -20,7 +20,7 @@ public class AgenciaService {
     @Autowired
     private InstituicaoBancariaRepository instituicaoBancariaRepository;
 
-    public void inserirAgencia(AgenciaDTO dto) {
+    public String inserirAgencia(AgenciaDTO dto) {
         InstituicaoBancaria instituicao = instituicaoBancariaRepository.findById(dto.getCodigoInstituicao()).orElseThrow(() -> new RuntimeException("Instituição não encontrada"));
 
         Agencia entidade = new Agencia();
@@ -30,6 +30,8 @@ public class AgenciaService {
         entidade.setCidade(dto.getCidade());
         entidade.setInstituicao(instituicao);
         agenciaRepository.save(entidade);
+
+        return "Agencia Inserida com Sucesso";
     }
 
     public AgenciaDTO buscarAgencia(Long codigo) {

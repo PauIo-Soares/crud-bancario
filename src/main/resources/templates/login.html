@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container mt-4">
+  <h3>Login</h3>
+  <form th:object="${login}" method="post" th:action="@{/login}">
+    <input type="hidden" name="next" th:value="${next}" />
+    <!-- se houver dados do secondTitular (vindo de preconfirm), renderiza hidden fields para repassar -->
+    <div th:if="${secondTitular != null}">
+      <input type="hidden" name="cpfConjunto" th:value="${secondTitular.cpfConjunto}" />
+      <input type="hidden" name="nome" th:value="${secondTitular.nome}" />
+      <input type="hidden" name="senha" th:value="${secondTitular.senha}" />
+      <input type="hidden" name="dataAbertura" th:value="${secondTitular.dataAbertura}" />
+      <input type="hidden" name="contaCodigo" th:value="${secondTitular.codigoConta}" />
+    </div>
+
+    <div class="mb-2"><label>CPF</label><input th:field="*{cpf}" class="form-control"/></div>
+    <div class="mb-2"><label>Senha</label><input th:field="*{senha}" type="password" class="form-control"/></div>
+    <button class="btn btn-primary" type="submit">Entrar</button>
+  </form>
+  <div th:if="${erro}" class="alert alert-danger mt-2" th:text="${erro}"></div>
+</div>
+</body>
+</html>

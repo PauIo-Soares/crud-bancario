@@ -37,8 +37,12 @@ public class ClienteService {
         return retornoCliente + " | " + retornoConta;
     }
 
-    public Cliente buscarCliente(String cpf) {
-        return clienteRepository.findById(cpf).orElse(null);
+    public ClienteDTO buscarCliente(String cpf) {
+        Cliente cliente = clienteRepository.findById(cpf).orElse(null);
+        if (cliente == null) {
+            throw new RuntimeException("Cliente não encontrado");
+        }
+        return new ClienteDTO(cliente.getCpf(), cliente.getNome(), cliente.getDataPrimeiraConta());
     }
 
     public String alterarSenha(AlterarSenhaDTO dto) {

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Adicionar Segundo Titular</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container mt-4">
+  <h3>Adicionar Segundo Titular - Conta <span th:text="${contaCodigo}"></span></h3>
+  <form th:object="${secondTitular}" method="post" th:action="@{/conta/segundo-titular/preconfirm}">
+    <input type="hidden" name="contaCodigo" th:value="${contaCodigo}" />
+    <div class="mb-2"><label>CPF</label><input th:field="*{cpfConjunto}" class="form-control"/></div>
+    <div class="mb-2"><label>Nome</label><input th:field="*{nome}" class="form-control"/></div>
+    <div class="mb-2"><label>Senha</label><input th:field="*{senha}" class="form-control"/></div>
+    <div class="mb-2"><label>Data (opcional)</label><input th:field="*{dataAbertura}" type="date" class="form-control"/></div>
+    <button class="btn btn-primary" type="submit">Próximo: Confirmar com Login</button>
+  </form>
+</div>
+</body>
+</html>

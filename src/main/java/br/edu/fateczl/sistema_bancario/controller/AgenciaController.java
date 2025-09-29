@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/agencia")
+@RequestMapping("/api/agencia")
 public class AgenciaController {
 
     @Autowired
@@ -17,8 +17,7 @@ public class AgenciaController {
 
     @PostMapping
     public String inserirAgencia(@RequestBody AgenciaDTO agencia) {
-        agenciaService.inserirAgencia(agencia);
-        return "Agencia inserida com sucesso";
+        return agenciaService.inserirAgencia(agencia);
     }
 
     @GetMapping("/{codigo}")
