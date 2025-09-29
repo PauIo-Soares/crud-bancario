@@ -46,7 +46,7 @@
 
     <hr/>
 
-    <h4>Operações (saldo/limite/rendimento)</h4>
+    <h4>Operações</h4>
     <form th:object="${atualizar}" method="post" th:action="@{/conta}">
         <div class="mb-2"><label>Código da Conta</label><input th:field="*{codigo}" class="form-control"/></div>
         <div class="mb-2"><label>Saldo</label><input th:field="*{saldo}" class="form-control"/></div>
@@ -56,10 +56,8 @@
             <button class="btn btn-warning" type="submit" name="action" value="Atualizar-Saldo">Atualizar Saldo</button>
             <button class="btn btn-warning" type="submit" name="action" value="Atualizar-Limite">Atualizar Limite
             </button>
-            <button class="btn btn-warning" type="submit" name="action" value="Atualizar-Rendimento">Atualizar
-                Rendimento
+            <button class="btn btn-warning" type="submit" name="action" value="Atualizar-Rendimento">Atualizar Rendimento
             </button>
-            <button class="btn btn-danger" type="submit" name="action" value="Excluir">Excluir</button>
             <button class="btn btn-info" type="submit" name="action" value="Listar">Listar</button>
         </div>
     </form>
