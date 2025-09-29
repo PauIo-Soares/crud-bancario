@@ -35,25 +35,21 @@ public class LoginController {
                           Model model) {
         try {
             if ("dados".equals(next)) {
-                // ver dados das contas do cliente
                 List<ContaDTO> contas = contaService.buscarDadosContas(login);
                 model.addAttribute("contas", contas);
                 return "dados-contas";
             } else if ("confirm-add-second-titular".equals(next)) {
-                // lê os campos hidden enviados junto com o login e reconstrói o DTO
                 AdicionarSegundoTitularDTO segundo = new AdicionarSegundoTitularDTO();
                 segundo.setCpfConjunto(params.get("cpfConjunto"));
                 segundo.setNome(params.get("nome"));
                 segundo.setSenha(params.get("senha")); // se enviado
                 segundo.setCodigoConta(params.get("contaCodigo"));
-                // data (opcional)
                 String dataAberturaStr = params.get("dataAbertura");
                 if (dataAberturaStr != null && !dataAberturaStr.isEmpty()) {
                     try {
                         segundo.setDataAbertura(LocalDate.parse(dataAberturaStr));
                     } catch (Exception ignored) { }
                 }
-                // chama service que espera (LoginDTO, AdicionarSegundoTitularDTO)
                 String saida = contaService.adicionarSegundoTitular(login, segundo);
                 model.addAttribute("saida", saida);
                 model.addAttribute("contas", contaService.listarContas());
