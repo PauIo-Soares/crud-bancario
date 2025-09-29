@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Dados das Contas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container mt-4">
+  <h3>Contas do Cliente</h3>
+  <table class="table table-striped" th:if="${contas}">
+    <thead><tr><th>Código</th><th>Data Abertura</th><th>Saldo</th></tr></thead>
+    <tbody>
+    <tr th:each="c : ${contas}">
+      <td th:text="${c.codigo}"></td>
+      <td th:text="${c.dataAbertura}"></td>
+      <td th:text="${c.saldo}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <div th:if="${contas == null || #lists.isEmpty(contas)}">
+    <p>Nenhuma conta encontrada.</p>
+  </div>
+</div>
+</body>
+</html>

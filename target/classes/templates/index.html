@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Index</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container mt-4">
+  <h1>Trabalho Lab de Banco de Dados</h1>
+  <p>CRUDS e Funcionalidades</p>
+  <ul>
+    <li><a th:href="@{/instituicao}">InstituiçãoBancaria</a></li>
+    <li><a th:href="@{/agencia}">Agência</a></li>
+    <li><a th:href="@{/cliente}">Cliente</a></li>
+    <li><a th:href="@{/conta}">Conta</a></li>
+    <li><a th:href="@{/login(next='dados')}">Login do Cliente (ver contas)</a></li>
+  </ul>
+</div>
+</body>
+</html>
