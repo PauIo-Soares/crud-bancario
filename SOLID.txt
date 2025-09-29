@@ -1,0 +1,16 @@
+Aplicação dos Princípios SOLID no Projeto
+
+S – Princípio da Responsabilidade Única
+Cada classe do projeto foi desenvolvida com apenas uma responsabilidade. Por exemplo, as model/entity representam apenas os dados, as repositories cuidam da persistência, as services concentram as regras de negócio (apesar da maioria das regras estar no banco, elas tentam controlar o fluxo pelo menos), e os controllers fazem a comunicação com a camada de view, apenas recebem requisições e mandam respostam.
+
+O – Princípio Aberto/Fechado
+As classes estão abertas para extensão, mas fechadas para modificação. Exemplo: Novos tipos de conta (como Conta Corrente ou Conta Poupança) pode ser feitas herdando ou estendendo classes existentes, sem alterar o código já implementado.
+
+L – Princípio da Substituição de Liskov
+A hierarquia de herança foi respeitada. Uma ContaCorrente ou uma ContaPoupanca pode ser usada no lugar da classe genérica Conta sem quebrar o funcionamento do sistema, garantindo polimorfismo seguro.
+
+I – Princípio da Segregação de Interfaces
+O projeto respeita o princípio ao separar os Repositories por entidade. As interfaces que estendem JpaRepository são específicas e só expõem métodos relevantes para cada classe (Cliente, Conta, Agência, Instituição Bancária) e as repositories que chama procedures, também só expoem metodos relevantes para cada classe. O ISP também aparece na herança entre Conta, ContaCorrente e ContaPoupanca. Cada tipo de conta implementa apenas os atributos e comportamentos relevantes, sem ser obrigada a lidar com propriedades que não se aplicam a ela.
+
+D – Princípio da Inversão de Dependência
+O projeto segue a inversão de dependência através do uso de injeção de dependência do Spring, com a anotação @Autowired. Os Controllers dependem de abstrações, serviços, e não de implementações concretas, facilitando manutenção, testes e substituição de componentes.

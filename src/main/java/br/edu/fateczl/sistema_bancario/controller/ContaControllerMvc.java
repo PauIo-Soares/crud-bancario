@@ -60,7 +60,6 @@ public class ContaControllerMvc {
         return "conta";
     }
 
-    // PASSO 1: mostrar form para preencher dados do 2º titular
     @GetMapping("/segundo-titular")
     public String showAddSecondTitularForm(@RequestParam("contaCodigo") String contaCodigo, Model model) {
         AdicionarSegundoTitularDTO dto = new AdicionarSegundoTitularDTO();
@@ -70,10 +69,8 @@ public class ContaControllerMvc {
         return "conta-segundo-titular";
     }
 
-    // PASSO 2: receber 2º titular, preparar confirmação (sem session) e ir para login (com hidden fields)
     @PostMapping("/segundo-titular/preconfirm")
     public String preconfirmSecondTitular(@ModelAttribute("secondTitular") AdicionarSegundoTitularDTO segundo, @RequestParam("contaCodigo") String contaCodigo, Model model) {
-        // encaminha para a tela de login, mas adiciona os dados do segundo titular como atributos
         model.addAttribute("next", "confirm-add-second-titular");
         model.addAttribute("login", new br.edu.fateczl.sistema_bancario.dto.LoginDTO());
         model.addAttribute("secondTitular", segundo);

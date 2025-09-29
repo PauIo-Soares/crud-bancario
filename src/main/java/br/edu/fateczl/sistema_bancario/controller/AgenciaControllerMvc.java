@@ -37,7 +37,6 @@ public class AgenciaControllerMvc {
         List<AgenciaDTO> lista = null;
         try {
             if ("Inserir".equalsIgnoreCase(action)) {
-                // supondo que seu service inserirAgencia seja void (JPA). Mantive padrão.
                 agenciaService.inserirAgencia(agencia);
                 saida = "Agência inserida com sucesso";
             } else if ("Buscar".equalsIgnoreCase(action)) {
