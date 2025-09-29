@@ -9,7 +9,6 @@
   <h3>Login</h3>
   <form th:object="${login}" method="post" th:action="@{/login}">
     <input type="hidden" name="next" th:value="${next}" />
-    <!-- se houver dados do secondTitular (vindo de preconfirm), renderiza hidden fields para repassar -->
     <div th:if="${secondTitular != null}">
       <input type="hidden" name="cpfConjunto" th:value="${secondTitular.cpfConjunto}" />
       <input type="hidden" name="nome" th:value="${secondTitular.nome}" />
